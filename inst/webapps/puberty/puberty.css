@@ -1,0 +1,94 @@
+body {
+    font: 12px Verdana, Arial, Helvetica;	
+    margin: 0;
+    padding: 100px 1em 1em 1em;
+    background: url(faux.jpg) repeat-x 0 65px;
+}
+
+h1 {
+	margin: 0;
+	padding: .5em;
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 55px;
+	text-indent: 65px;
+	line-height: 47px;
+    font-size: 14px;
+    background: url(logo.jpg) no-repeat 10px 10px;
+}
+
+fieldset {
+	border: none;
+}
+
+legend { 
+    display: none; 
+}
+
+fieldset label, fieldset input, fieldset select {
+    display: block;
+    width: 150px;
+    float: left;
+    margin-bottom: 10px;
+}
+
+fieldset label {
+    text-align: right;
+    width: 175px;
+    line-height: 20px;
+    padding-right: 20px;
+}
+
+#buttons {
+	text-align: left;
+    text-indent: -1000em;	
+}
+
+#refdiv{
+	width: 670px;
+	text-align: right;
+}
+
+
+fieldset br {
+    clear: left;
+}
+
+table {
+	margin-top: 25px;
+	margin-bottom: 25px;
+}
+
+table tr {
+}
+
+table th {
+	margin: 0;
+	padding: 0 4px 0 4px;
+}
+
+table td {
+	margin: 0;
+    padding: 0 4px 0 4px;
+    line-height: 20px;
+}
+
+table select, table input {
+	margin: 2px;
+	padding: 0;
+    width: 75px;
+}
+
+button{
+	width: 60px;
+}
+
+#author{
+	font: 10px Verdana, Arial, Helvetica;
+	text-align: right;
+
+}
+#PubertyProLink{
+	font: 11px Verdana, Arial, Helvetica;
+}

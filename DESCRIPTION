@@ -1,0 +1,11 @@
+Package: pubertyplot
+Type: Package
+Title: pubertyplot
+Version: 1.1
+Date: 2012-07-23
+Author: Jeroen Ooms
+Maintainer: Jeroen Ooms <jeroen.ooms@stat.ucla.edu>
+Description: Packaged up version of puberty plot webapp
+License: Copyright Owned by TNO
+Depends: foreign
+Packaged: 2012-07-23 16:56:34 UTC; jeroen

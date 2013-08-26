@@ -1,0 +1,15 @@
+#install R and the pubertyplot package
+R CMD INSTALL pubertyplot_1.0.tar.gz
+
+#install rapache, e.g. using the package
+sudo apt-get install libapache2-mod-r-base
+
+#copy the site file from the package and activate
+sudo cp -Rf /usr/local/lib/R/site-library/pubertyplot/sites-available/puberty /etc/apache2/sites-available
+sudo a2ensite puberty
+
+#restart apache
+sudo service apache2 restart
+
+#if anything isn't working, check the error log:
+tail /var/log/apache2/error.log

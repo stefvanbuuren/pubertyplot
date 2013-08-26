@@ -1,0 +1,19 @@
+ALIAS /puberty /usr/local/lib/R/site-library/pubertyplot/webapps/puberty
+ALIAS /pubertypro /usr/local/lib/R/site-library/pubertyplot/webapps/pubertypro
+ALIAS /plotdumpdir /tmp/plotfiles
+
+<Location /pubertyplot>
+        SetHandler r-handler
+        RHandler pubertyplot::plotter 
+</Location>
+
+<Location /pubertyproplot>
+        SetHandler r-handler
+        RHandler pubertyplot::plotterpro
+</Location>
+
+<Location /pubertyupload>
+        SetHandler r-handler
+        RHandler pubertyplot::upload_tryCatch_pro
+</Location>
+

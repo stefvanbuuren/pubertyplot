@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US">
+	<head>
+		<title> Puberty Pro </title>
+        <link rel="stylesheet" type="text/css" href="pubertypro.css">
+		<script src="prototype.js" type="text/javascript"></script>
+		<script src="webtoolkit.aim.js" type="text/javascript"></script>
+        <script src="pubertypro.js" type="text/javascript"></script>		
+	</head>
+	
+	<body>
+	<div id="contentdiv">
+		<h1>Puberty Plot Pro Web Application</h1>
+		<div id="step1div">
+		<h2>Step 1: Upload your data (SPSS, CSV or Tab Delimited) </h2>
+			<fieldset>
+			<legend>Input</legend>
+				<form action="../brew/upload-tryCatch-pro.rhtml" enctype="multipart/form-data" method="post" onsubmit="return AIM.submit(this, {'onStart' : startCallback, 'onComplete' : completeCallback})">
+					
+					<!--<div><label>Name:</label> <input id="name" type="text" name="name" /></div><br>-->
+					<div><label>Datafile:</label> <input type="file" name="datafile" id="datafile" /></div><br>
+					<label id="buttons">Buttons:</label>
+					<div><input type="submit" value="SUBMIT" /></div>
+				</form>
+			</fieldset>
+		</div>
+		<div id="step2div">
+			<div id="dataTable"> </div>
+			<div id="goPlaceholder"> </div>
+		</div>
+	
+		<div id="step3div">
+			<div id="icons"> </div>
+		</div>
+		
+	</div>
+	<div id="author">
+			Puberty Plot S-plus package by Stef van Buuren, TNO Quality of Life. (c) 2008 TNO. <br>
+			Web application written by Jeroen Ooms, Utrecht University, 2008. <br>
+			Email: stef.vanbuuren[at]tno[dot]nl || jeroenooms[at]gmail[dot]com. <br>
+	</div>	
+	
+		
+		<script type="text/javascript">
+		var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+		document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		</script>
+		<script type="text/javascript">
+		try {
+		var pageTracker = _gat._getTracker("UA-701288-2");
+		pageTracker._trackPageview();
+		} catch(err) {}</script>	
+	
+	</body>
+
+</html>
