@@ -1,11 +1,13 @@
 Package: pubertyplot
 Type: Package
 Title: pubertyplot
-Version: 1.2
-Date: 2013-08-26
-Author: Jeroen Ooms
+Version: 1.3
+Date: 2020-08-06
+Author: Jeroen Ooms, Stef van Buuren
 Maintainer: Jeroen Ooms <jeroen.ooms@stat.ucla.edu>
 Description: Packaged up version of puberty plot webapp
-License: Copyright Owned by TNO
-Depends: foreign
+License: MIT + file LICENSE
+Depends: 
+    foreign,
+    R (>= 2.10)
 Packaged: 2012-07-23 16:56:34 UTC; jeroen
