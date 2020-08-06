@@ -4,10 +4,8 @@
 # Version: Oct 23, 2008
 # (c) 2008 TNO
 
-pubdatafile <- system.file("rawdata/pub.ref.1997.txt", package="pubertyplot")
-
 plot.stadia <- function(data=pub.data, persons=unique(data$id), plotline=c(T,F,F), type=c(T,F,F), colors=c("blue","green","red"),
-		overlay=F, ovsex="M", ref = pub.ref.lines, title="Tanner pubertal stages - Patient ", padid = T){
+		overlay=F, ovsex="M", ref = pubertyplot::pub.ref.lines, title="Tanner pubertal stages - Patient ", padid = T){
 	
 	if(overlay) {  # plot everything on one graph
 		plot.stadia.general(" ", opt=c(T,T,F,F,F), title=title)
@@ -285,7 +283,7 @@ tnologo <- function(col = "darkblue", bcol = "white", at=c(0,0), size=300, aspec
 
 
 # define the function for calculating SDS
-calculateSDS <- function(age, stage, type, ref=pub.ref){
+calculateSDS <- function(age, stage, type, ref=pubertyplot::pub.ref){
 	# calculates the SDS
 	# age - vector of patient ages
 	# stage - vector of patient stages
