@@ -3,6 +3,25 @@
 Tools to plot Tanner pubertal stage measurements against the Dutch 1997
 references and express them as standard deviation scores (SDS).
 
+This package implements the stage line diagram method described in:
+
+> van Buuren, S. and Ooms, J.C.L. (2009). Stage line diagram: An
+> age-conditional reference diagram for tracking development. *Statistics
+> in Medicine*, 28(11), 1569–1579. <https://doi.org/10.1002/sim.3567>
+
+```bibtex
+@article{vanbuuren-2009-1,
+  title        = {Stage line diagram: An age-conditional reference diagram for tracking development},
+  author       = {{van Buuren}, S. and Ooms, J.C.L.},
+  year         = {2009},
+  journal      = {Statistics in Medicine},
+  volume       = {28},
+  number       = {11},
+  pages        = {1569--1579},
+  doi          = {10.1002/sim.3567}
+}
+```
+
 This README covers three things:
 
 1. [Calculating SDS in plain R](#1-calculating-sds-in-plain-r) — no web app needed.
@@ -18,7 +37,14 @@ For the original production deployment (Apache + rApache), see
 ## Installation
 
 ```r
-# from a local clone
+# from GitHub
+install.packages("devtools")
+devtools::install_github("stefvanbuuren/pubertyplot")
+```
+
+Or from a local clone:
+
+```r
 install.packages("devtools")
 devtools::install(".")
 
@@ -91,6 +117,40 @@ to `calculateSDS()` needs recoding, not the data you save or display.
 > SDS is effectively ±Inf for an extreme outlier, e.g. genital stage 1 at age
 > 19). `calculateSDS()` still returns a value, but [`plot_stadia()`](#3-producing-bulk-diagrams-with-puberty-pro)
 > will silently skip drawing a point for it, since it falls off the chart.
+
+### All six SDS at once on a mixed data.frame
+
+`calculateSDS()` is vectorized, so a whole data.frame with both sexes can be
+processed in one go. Calling it on a stage column that doesn't apply to a row
+(e.g. `gen` for a girl) just returns `NA` for that row, so there's no need to
+split the data by sex first:
+
+```r
+mydata <- read.csv("inst/webapps/pubertypro/demo.csv")
+names(mydata) <- tolower(names(mydata))
+mydata$age <- as.numeric(gsub(",", ".", mydata$age))
+
+# tv: ml -> 1-8 stage index, only for the calculateSDS() call
+tv_stage <- mydata$tv
+tv_stage[!is.na(tv_stage) & tv_stage == 2]  <- 1
+tv_stage[!is.na(tv_stage) & tv_stage == 3]  <- 2
+tv_stage[!is.na(tv_stage) & tv_stage == 4]  <- 3
+tv_stage[!is.na(tv_stage) & tv_stage == 8]  <- 4
+tv_stage[!is.na(tv_stage) & tv_stage == 12] <- 5
+tv_stage[!is.na(tv_stage) & tv_stage == 16] <- 6
+tv_stage[!is.na(tv_stage) & tv_stage == 20] <- 7
+tv_stage[!is.na(tv_stage) & tv_stage == 25] <- 8
+
+mydata$SDS_gen <- round(calculateSDS(mydata$age, mydata$gen, "gen"), 2)
+mydata$SDS_phb <- round(calculateSDS(mydata$age, mydata$phb, "phb"), 2)
+mydata$SDS_tv  <- round(calculateSDS(mydata$age, tv_stage,    "tv"),  2)
+mydata$SDS_bre <- round(calculateSDS(mydata$age, mydata$bre, "bre"), 2)
+mydata$SDS_phg <- round(calculateSDS(mydata$age, mydata$phg, "phg"), 2)
+mydata$SDS_men <- round(calculateSDS(mydata$age, mydata$men, "men"), 2)
+```
+
+This is the same calculation [Puberty Pro](#3-producing-bulk-diagrams-with-puberty-pro)
+runs for every uploaded dataset.
 
 ## 2. Running the local mock web app
 
