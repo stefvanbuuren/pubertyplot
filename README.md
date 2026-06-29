@@ -52,6 +52,43 @@ devtools::install(".")
 devtools::load_all(".")
 ```
 
+## Example: plotting a stage line diagram
+
+`plot_stadia()` draws a patient's pubertal stage trajectory against the
+Dutch 1997 reference percentiles. Here's a boy followed from age 9 to 15,
+tracked on genital stage, pubic hair stage, and testicular volume:
+
+```r
+library(pubertyplot)
+
+# tv must be given as the 1-8 stage index here, not raw ml -- see
+# "Boys: gen / phb / tv" below for the ml -> stage recoding
+mydata <- data.frame(
+  id  = 1,
+  age = c(9, 10.5, 12, 13.5, 15),
+  sex = "M",
+  gen = c(1, 2, 3, 4, 5),
+  phb = c(1, 2, 3, 4, 4),
+  tv  = c(1, 2, 4, 5, 7),
+  bre = NA, phg = NA, men = NA
+)
+
+plot_stadia(
+  data = mydata,
+  persons = 1,
+  type = c(TRUE, TRUE, TRUE),
+  plotline = c(TRUE, TRUE, TRUE),
+  title = "Puberty Plot",
+  padid = FALSE
+)
+```
+
+![Example stage line diagram](man/figures/example-plot.png)
+
+The shaded bands mark the 1%, 5% and 10% earliest/latest percentiles for
+each reference curve (Genital in blue, Pubic hair in green, Testis in red);
+the thick lines are this patient's own trajectory.
+
 ## 1. Calculating SDS in plain R
 
 `calculateSDS(age, stage, type)` converts an age + observed pubertal stage
