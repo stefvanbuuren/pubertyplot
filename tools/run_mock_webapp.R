@@ -64,8 +64,14 @@ webroots <- list(
   pubertypro = file.path(webappsroot, "pubertypro")
 )
 
-plotdumpdir <<- file.path(tempdir(), "plotfiles")
+## plotter() and plotterpro() read the package's own `plotdumpdir`
+## binding (set by .onLoad() to the hardcoded "/tmp/plotfiles"), not a
+## global variable of the same name -- so it must be overridden inside
+## the package namespace to actually take effect, and to work on
+## platforms without a writable "/tmp" (e.g. Windows).
+plotdumpdir <- file.path(tempdir(), "plotfiles")
 dir.create(plotdumpdir, showWarnings = FALSE, recursive = TRUE)
+assignInNamespace("plotdumpdir", plotdumpdir, ns = "pubertyplot")
 
 setContentType <<- function(type) invisible(NULL)
 
