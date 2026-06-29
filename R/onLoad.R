@@ -6,7 +6,7 @@
 #'
 #' @export
 #The default
-plotdumpdir = "";
+plotdumpdir <- ""
 
 # GET, POST and FILES are injected into the global environment by rApache
 # at request time; setContentType() is an rApache built-in. Neither exists
@@ -14,7 +14,7 @@ plotdumpdir = "";
 utils::globalVariables(c("GET", "POST", "FILES", "setContentType", "pub.data"))
 
 #Override during load?
-.onLoad <- function(...){
-	plotdumpdir <<- "/tmp/plotfiles"
-	dir.create(plotdumpdir, showWarnings=F);
+.onLoad <- function(...) {
+  plotdumpdir <<- "/tmp/plotfiles"
+  dir.create(plotdumpdir, showWarnings = F)
 }
