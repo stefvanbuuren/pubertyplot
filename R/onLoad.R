@@ -16,5 +16,5 @@ utils::globalVariables(c("GET", "POST", "FILES", "setContentType", "pub.data"))
 #Override during load?
 .onLoad <- function(...) {
   plotdumpdir <<- "/tmp/plotfiles"
-  dir.create(plotdumpdir, showWarnings = F)
+  dir.create(plotdumpdir, showWarnings = FALSE)
 }

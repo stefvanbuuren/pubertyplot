@@ -7,14 +7,14 @@
 plot_stadia(
   data = pub.data,
   persons = unique(data$id),
-  plotline = c(T, F, F),
-  type = c(T, F, F),
+  plotline = c(TRUE, FALSE, FALSE),
+  type = c(TRUE, FALSE, FALSE),
   colors = c("blue", "green", "red"),
-  overlay = F,
+  overlay = FALSE,
   ovsex = "M",
   ref = pubertyplot::pub.ref.lines,
   title = "Tanner pubertal stages - Patient ",
-  padid = T
+  padid = TRUE
 )
 }
 \arguments{

@@ -34,25 +34,29 @@
 plot_stadia <- function(
   data = pub.data,
   persons = unique(data$id),
-  plotline = c(T, F, F),
-  type = c(T, F, F),
+  plotline = c(TRUE, FALSE, FALSE),
+  type = c(TRUE, FALSE, FALSE),
   colors = c("blue", "green", "red"),
-  overlay = F,
+  overlay = FALSE,
   ovsex = "M",
   ref = pubertyplot::pub.ref.lines,
   title = "Tanner pubertal stages - Patient ",
-  padid = T
+  padid = TRUE
 ) {
   if (overlay) {
     # plot everything on one graph
-    plot_stadia_general(" ", opt = c(T, T, F, F, F), title = title)
+    plot_stadia_general(
+      " ",
+      opt = c(TRUE, TRUE, FALSE, FALSE, FALSE),
+      title = title
+    )
     plot_stadia_lines(plotline, colors, ovsex, ref)
-    plot_stadia_general(opt = c(F, F, T, T, T))
+    plot_stadia_general(opt = c(FALSE, FALSE, TRUE, TRUE, TRUE))
   }
   for (i in 1:length(persons)) {
     pnr <- persons[i]
     select <- data$id == pnr
-    if (any(select, na.rm = T)) {
+    if (any(select, na.rm = TRUE)) {
       # skip persons that do not exist in the data
       sex <- data[select, "sex"][1]
       ages <- data[select, "age"]
@@ -65,12 +69,12 @@ plot_stadia <- function(
       if (!overlay) {
         plot_stadia_general(
           toString(pnr),
-          opt = c(T, T, F, F, F),
+          opt = c(TRUE, TRUE, FALSE, FALSE, FALSE),
           title = title,
-          padid = T
+          padid = TRUE
         )
         plot_stadia_lines(plotline, colors, sex, ref)
-        plot_stadia_general(opt = c(F, F, T, T, T))
+        plot_stadia_general(opt = c(FALSE, FALSE, TRUE, TRUE, TRUE))
       }
       plot_stadia_data(ages, pubs, sex, type, colors, ref = ref)
     }
@@ -97,9 +101,9 @@ plot_stadia <- function(
 #' @importFrom grDevices rgb
 plot_stadia_general <- function(
   i = " ",
-  opt = c(T, T, T, T, T),
+  opt = c(TRUE, TRUE, TRUE, TRUE, TRUE),
   title = " ",
-  padid = T
+  padid = TRUE
 ) {
   # opt 1 : plot frame and title
   # opt 2 : plot the extreme regions
@@ -121,7 +125,7 @@ plot_stadia_general <- function(
       las = 1,
       cex = 1,
       tck = -0.01,
-      axes = F
+      axes = FALSE
     )
     title(main = title, cex = 0.8)
   }
@@ -130,38 +134,38 @@ plot_stadia_general <- function(
       x = c(rep(par("usr")[1], 2), rep(par("usr")[2], 2)),
       y = c(qnorm(0.05), qnorm(0.025), qnorm(0.025), qnorm(0.05)),
       col = rgb(1, 0.8, 0.8),
-      border = F
+      border = FALSE
     )
     polygon(
       x = c(rep(par("usr")[1], 2), rep(par("usr")[2], 2)),
       y = c(qnorm(0.025), qnorm(0.005), qnorm(0.005), qnorm(0.025)),
       col = rgb(1, 0.6, 0.6),
-      border = F
+      border = FALSE
     )
     polygon(
       x = c(rep(par("usr")[1], 2), rep(par("usr")[2], 2)),
       y = c(qnorm(0.005), rep(par("usr")[3], 2), qnorm(0.005)),
       col = rgb(1, .4, 0.4),
-      border = F
+      border = FALSE
     )
 
     polygon(
       x = c(rep(par("usr")[1], 2), rep(par("usr")[2], 2)),
       y = c(qnorm(0.95), qnorm(0.975), qnorm(0.975), qnorm(0.95)),
       col = rgb(0.8, 0.8, 1),
-      border = F
+      border = FALSE
     )
     polygon(
       x = c(rep(par("usr")[1], 2), rep(par("usr")[2], 2)),
       y = c(qnorm(0.975), qnorm(0.995), qnorm(0.995), qnorm(0.975)),
       col = rgb(0.6, 0.6, 1),
-      border = F
+      border = FALSE
     )
     polygon(
       x = c(rep(par("usr")[1], 2), rep(par("usr")[2], 2)),
       y = c(qnorm(0.995), rep(par("usr")[4], 2), qnorm(0.995)),
       col = rgb(0.4, 0.4, 1),
-      border = F
+      border = FALSE
     )
 
     text(
@@ -193,8 +197,8 @@ plot_stadia_general <- function(
     box()
     axis(1)
     axis(2, las = 1)
-    axis(3, labels = F)
-    axis(4, las = 1, labels = F)
+    axis(3, labels = FALSE)
+    axis(4, las = 1, labels = FALSE)
   }
   if (opt[5]) {
     mtext("Dutch 1997 references", 1, line = 3.3, at = 8, cex = 0.7, adj = 0)
@@ -490,12 +494,12 @@ findXY <- function(refx, refy, patx, pats) {
   for (i in 1:nrow(segments)) {
     select <- segments[i, ]
     theStage <- pats[select][1]
-    if (any(select, na.rm = T)) {
+    if (any(select, na.rm = TRUE)) {
       # append reference data
       x1 <- patx[select & !is.na(select)]
-      x2 <- refx[refx > min(x1, na.rm = T) & refx < max(x1, na.rm = T)] # x2 is needed for plotting along the curve
+      x2 <- refx[refx > min(x1, na.rm = TRUE) & refx < max(x1, na.rm = TRUE)] # x2 is needed for plotting along the curve
       xo <- c(x1, x2)
-      flags <- c(rep(T, sum(select, na.rm = T)), rep(F, length(x2)))
+      flags <- c(rep(TRUE, sum(select, na.rm = TRUE)), rep(FALSE, length(x2)))
 
       # sort in proper order
       ix <- order(xo)
@@ -531,7 +535,7 @@ findSegments <- function(z) {
   y <- z[!is.na(z)]
   nsegments <- sum(diff(y) != 0) + 1
 
-  selector <- matrix(F, nrow = nsegments, ncol = length(z))
+  selector <- matrix(FALSE, nrow = nsegments, ncol = length(z))
   k <- 1
   z.old <- z[1]
   for (i in 1:length(z)) {
@@ -539,7 +543,7 @@ findSegments <- function(z) {
       k <- k + 1
     } # new segment
     if (!is.na(z[i])) {
-      selector[k, i] <- T
+      selector[k, i] <- TRUE
       z.old <- z[i]
     }
   }
@@ -664,20 +668,20 @@ tnologo <- function(
     x = offsetx + c(0, 0, 309, 309) * size,
     y = offsety + c(0, 300, 300, 0) * size * aspect,
     col = bcol,
-    border = F
+    border = FALSE
   )
-  polygon(x = x, y = y, col = c(col, bcol, col, col), border = F)
+  polygon(x = x, y = y, col = c(col, bcol, col, col), border = FALSE)
   polygon(
     x = offsetx + ((254.75 + Re(unit.circle) * 66.25)[select]) * scalex,
     y = offsety + ((138.25 + Im(unit.circle) * 66.25)[select]) * scaley,
     col = bcol,
-    border = F
+    border = FALSE
   )
   polygon(
     x = offsetx + (254.75 + Re(unit.circle) * 53.75) * scalex,
     y = offsety + (138.25 + Im(unit.circle) * 53.75) * scaley,
     col = col,
-    border = F
+    border = FALSE
   )
 }
 
@@ -713,8 +717,8 @@ calculateSDS <- function(age, stage, type, ref = pubertyplot::pub.ref) {
   for (j in 2:m) {
     q[, j] <- approx(x = r[, 1], y = r[, j], xout = age)$y
   }
-  low <- q[matrix(c(1:length(age), stage), ncol = 2, byrow = F)]
-  high <- q[matrix(c(1:length(age), stage + 1), ncol = 2, byrow = F)]
+  low <- q[matrix(c(1:length(age), stage), ncol = 2, byrow = FALSE)]
+  high <- q[matrix(c(1:length(age), stage + 1), ncol = 2, byrow = FALSE)]
   z <- qnorm(1 - (low + high) / 2)
   return(z)
 }

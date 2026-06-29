@@ -69,16 +69,16 @@ plotterpro <- function() {
 
     randomnum <- round(runif(1, 0, 100000))
     file <- paste(plotdumpdir, "/.", name, ".", randomnum, ".csv", sep = "")
-    write.csv(mydata, file, quote = F, na = " ", row.names = F, eol = "\r\n")
+    write.csv(mydata, file, quote = FALSE, na = " ", row.names = FALSE, eol = "\r\n")
 
     file <- paste(plotdumpdir, "/.", name, ".", randomnum, ".txt", sep = "")
     write.table(
       mydata,
       file,
       sep = "\t",
-      quote = F,
+      quote = FALSE,
       na = " ",
-      row.names = F,
+      row.names = FALSE,
       eol = "\r\n"
     )
 
@@ -88,9 +88,9 @@ plotterpro <- function() {
     pdf(file = file, paper = "a4r", width = 11.67, height = 8.27)
     plot_stadia(
       data = pub.data,
-      type = c(T, T, T),
-      plotline = c(F, F, F),
-      padid = T
+      type = c(TRUE, TRUE, TRUE),
+      plotline = c(FALSE, FALSE, FALSE),
+      padid = TRUE
     )
     dev.off()
 

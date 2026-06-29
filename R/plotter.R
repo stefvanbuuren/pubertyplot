@@ -103,10 +103,10 @@ plotter <- function() {
   plot_stadia(
     data = pub.data,
     persons = 1,
-    type = c(T, T, T),
+    type = c(TRUE, TRUE, TRUE),
     plotline = refVector,
     title = paste("Puberty Plot", name),
-    padid = F
+    padid = FALSE
   )
   dev.off()
 
@@ -115,10 +115,10 @@ plotter <- function() {
   plot_stadia(
     data = pub.data,
     persons = 1,
-    type = c(T, T, T),
+    type = c(TRUE, TRUE, TRUE),
     plotline = refVector,
     title = paste("Puberty Plot", name),
-    padid = F
+    padid = FALSE
   )
   dev.off()
 

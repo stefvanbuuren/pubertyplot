@@ -4,7 +4,12 @@
 \alias{plot_stadia_general}
 \title{Draw the frame, percentile bands and axes of a puberty stadia plot}
 \usage{
-plot_stadia_general(i = " ", opt = c(T, T, T, T, T), title = " ", padid = T)
+plot_stadia_general(
+  i = " ",
+  opt = c(TRUE, TRUE, TRUE, TRUE, TRUE),
+  title = " ",
+  padid = TRUE
+)
 }
 \arguments{
 \item{i}{Person identifier appended to the title when \code{padid = TRUE}.}

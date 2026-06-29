@@ -30,7 +30,7 @@ upload_tryCatch_pro <- function() {
     } else if (length(grep(".csv", filename)) > 0) {
       mydata <- read.csv(destination)
     } else {
-      mydata <- read.table(destination, header = T, sep = '\t')
+      mydata <- read.table(destination, header = TRUE, sep = '\t')
     }
 
     names(mydata) <- tolower(names(mydata)) # headers to lower case
