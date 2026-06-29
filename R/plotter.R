@@ -1,5 +1,18 @@
 #PLOTTER.RHTML
 
+#' rApache handler for the puberty plot webapp
+#'
+#' Reads pubertal staging data from the rApache \code{GET} request, builds
+#' a puberty plot and writes it to PDF and PNG files in \code{plotdumpdir}.
+#' This function is intended to be called from the rApache web frontend
+#' shipped in \code{inst/webapps}, not interactively from R.
+#'
+#' @return Invisibly writes plot files and prints the generated file name
+#'   stem to the response.
+#' @export
+#' @importFrom grDevices pdf png dev.off
+#' @importFrom stats runif
+#' @importFrom utils dump.frames
 plotter <- function(){
 	
 	setContentType('text/html')
@@ -60,12 +73,12 @@ plotter <- function(){
 	randomnum <- round(runif(1,0,100000));
 	file <- paste(plotdumpdir, "/." ,name,".",randomnum,".pdf",sep="")
 	pdf(file=file, paper="a4r",width=11.67, height=8.27)
-	plot.stadia(data=pub.data,person=1,type=c(T,T,T),plotline=refVector,title=paste("Puberty Plot",name),padid=F)
+	plot_stadia(data=pub.data,persons=1,type=c(T,T,T),plotline=refVector,title=paste("Puberty Plot",name),padid=F)
 	dev.off()
-	
+
 	file <- paste(plotdumpdir, "/.", name, ".", randomnum,".png",sep="")
-	png(file=file, width=700, height=500)
-	plot.stadia(data=pub.data,person=1,type=c(T,T,T),plotline=refVector,title=paste("Puberty Plot",name),padid=F)
+	png(filename=file, width=700, height=500)
+	plot_stadia(data=pub.data,persons=1,type=c(T,T,T),plotline=refVector,title=paste("Puberty Plot",name),padid=F)
 	dev.off()
 	
 	cat(paste("",name,randomnum,sep="."))

@@ -1,5 +1,19 @@
 #NOTES
 
+#' rApache handler for the professional puberty plot webapp
+#'
+#' Reads a saved data file referenced in the rApache \code{POST} request,
+#' calculates SDS values for the pubertal stages, and writes the results
+#' and a puberty plot to CSV, TXT and PDF files in \code{plotdumpdir}. This
+#' function is intended to be called from the rApache web frontend shipped
+#' in \code{inst/webapps}, not interactively from R.
+#'
+#' @return Invisibly writes output files and prints a JSON status string
+#'   to the response.
+#' @export
+#' @importFrom grDevices pdf dev.off
+#' @importFrom stats runif
+#' @importFrom utils write.csv write.table
 plotterpro <- function(){
 	
 	setContentType('text/html')
@@ -51,7 +65,7 @@ plotterpro <- function(){
 		#options(error=dump.frames);
 		file <- paste(plotdumpdir, "/.", name,".", randomnum, ".pdf",sep="");
 		pdf(file=file, paper="a4r",width=11.67, height=8.27);
-		plot.stadia(data=pub.data,type=c(T,T,T),plotline=c(F,F,F),padid=T);
+		plot_stadia(data=pub.data,type=c(T,T,T),plotline=c(F,F,F),padid=T);
 		dev.off();
 		
 		cat("{success:true, file:\"",paste("",name,randomnum,sep="."),"\"}",sep="");

@@ -4,13 +4,40 @@
 # Version: Oct 23, 2008
 # (c) 2008 TNO
 
-plot.stadia <- function(data=pub.data, persons=unique(data$id), plotline=c(T,F,F), type=c(T,F,F), colors=c("blue","green","red"),
+#' Plot a puberty stadia diagram
+#'
+#' Plots Tanner pubertal stage measurements for one or more persons against
+#' the Dutch 1997 reference curves, expressed as standard deviation scores
+#' (SDS) by age.
+#'
+#' @param data A data frame with columns \code{id}, \code{age}, \code{sex}
+#'   and the pubertal stage variables (\code{gen}, \code{phb}, \code{tv} for
+#'   males; \code{bre}, \code{phg}, \code{men} for females).
+#' @param persons Vector of person identifiers (values of \code{data$id}) to
+#'   plot.
+#' @param plotline Logical vector of length 3 indicating which reference
+#'   lines to draw.
+#' @param type Logical vector of length 3 indicating which pubertal stage
+#'   variables to plot.
+#' @param colors Character vector of length 3 with the colors used for the
+#'   three pubertal stage variables.
+#' @param overlay If \code{TRUE}, plot all persons on a single graph.
+#' @param ovsex Sex (\code{"M"} or \code{"F"}) used to select the reference
+#'   lines when \code{overlay = TRUE}.
+#' @param ref Reference data used to draw the reference lines, as produced
+#'   by \code{\link{pub.ref.lines}}.
+#' @param title Plot title.
+#' @param padid If \code{TRUE}, append the person identifier to the title.
+#' @return Invisibly returns \code{NULL}; the function draws on the current
+#'   graphics device.
+#' @export
+plot_stadia <- function(data=pub.data, persons=unique(data$id), plotline=c(T,F,F), type=c(T,F,F), colors=c("blue","green","red"),
 		overlay=F, ovsex="M", ref = pubertyplot::pub.ref.lines, title="Tanner pubertal stages - Patient ", padid = T){
-	
+
 	if(overlay) {  # plot everything on one graph
-		plot.stadia.general(" ", opt=c(T,T,F,F,F), title=title)
-		plot.stadia.lines(plotline, colors, ovsex, ref)
-		plot.stadia.general(opt=c(F,F,T,T,T))
+		plot_stadia_general(" ", opt=c(T,T,F,F,F), title=title)
+		plot_stadia_lines(plotline, colors, ovsex, ref)
+		plot_stadia_general(opt=c(F,F,T,T,T))
 	}
 	for (i in 1:length(persons)) {
 		pnr <- persons[i]
@@ -20,20 +47,37 @@ plot.stadia <- function(data=pub.data, persons=unique(data$id), plotline=c(T,F,F
 			ages <- data[select,"age"]
 			if (sex=="M") pubs <- data[select,c("gen","phb","tv")]
 			else pubs <- data[select,c("bre","phg","men")]
-			
+
 			if (!overlay) {
-				plot.stadia.general(toString(pnr), opt=c(T,T,F,F,F),title=title, padid=T)
-				plot.stadia.lines(plotline, colors, sex, ref)
-				plot.stadia.general(opt=c(F,F,T,T,T))
+				plot_stadia_general(toString(pnr), opt=c(T,T,F,F,F),title=title, padid=T)
+				plot_stadia_lines(plotline, colors, sex, ref)
+				plot_stadia_general(opt=c(F,F,T,T,T))
 			}
-			plot.stadia.data(ages, pubs, sex, type, colors, ref=ref)
+			plot_stadia_data(ages, pubs, sex, type, colors, ref=ref)
 		}
 	}
 }
 
 
 
-plot.stadia.general <- function(i = " ", opt=c(T,T,T,T,T), title=" ", padid=T){
+#' Draw the frame, percentile bands and axes of a puberty stadia plot
+#'
+#' Internal helper used by \code{\link{plot_stadia}} to draw the plot frame,
+#' the early/late percentile bands, the TNO logo and the axes.
+#'
+#' @param i Person identifier appended to the title when \code{padid = TRUE}.
+#' @param opt Logical vector of length 5 selecting which elements to draw:
+#'   frame and title, extreme percentile regions, TNO logo, axes, margin
+#'   reference text.
+#' @param title Plot title.
+#' @param padid If \code{TRUE}, append \code{i} to the title.
+#' @return Invisibly returns \code{NULL}; the function draws on the current
+#'   graphics device.
+#' @export
+#' @importFrom graphics plot title polygon par text abline box axis mtext
+#' @importFrom stats qnorm
+#' @importFrom grDevices rgb
+plot_stadia_general <- function(i = " ", opt=c(T,T,T,T,T), title=" ", padid=T){
 	# opt 1 : plot frame and title
 	# opt 2 : plot the extreme regions
 	# opt 3 : plot TNO logo
@@ -49,27 +93,43 @@ plot.stadia.general <- function(i = " ", opt=c(T,T,T,T,T), title=" ", padid=T){
 		polygon(x=c(rep(par("usr")[1],2),rep(par("usr")[2],2)),y=c(qnorm(0.05),qnorm(0.025),qnorm(0.025),qnorm(0.05)),col=rgb(1,0.8,0.8),border=F)
 		polygon(x=c(rep(par("usr")[1],2),rep(par("usr")[2],2)),y=c(qnorm(0.025),qnorm(0.005),qnorm(0.005),qnorm(0.025)),col=rgb(1,0.6,0.6),border=F)
 		polygon(x=c(rep(par("usr")[1],2),rep(par("usr")[2],2)),y=c(qnorm(0.005),rep(par("usr")[3],2),qnorm(0.005)),col=rgb(1,.4,0.4),border=F)
-		
+
 		polygon(x=c(rep(par("usr")[1],2),rep(par("usr")[2],2)),y=c(qnorm(0.95),qnorm(0.975),qnorm(0.975),qnorm(0.95)),col=rgb(0.8,0.8,1),border=F)
 		polygon(x=c(rep(par("usr")[1],2),rep(par("usr")[2],2)),y=c(qnorm(0.975),qnorm(0.995),qnorm(0.995),qnorm(0.975)),col=rgb(0.6,0.6,1),border=F)
 		polygon(x=c(rep(par("usr")[1],2),rep(par("usr")[2],2)),y=c(qnorm(0.995),rep(par("usr")[4],2),qnorm(0.995)),col=rgb(0.4,0.4,1),border=F)
-		
+
 		text(x=c(9,9,9,21,21,21),y=c(-1.8,-2.27,-2.9,1.8,2.27,2.9),
 				labels=c("10% late","5% late","1% late","10% early","5% early","1% early"),adj=1)
-		
+
 		abline(0,0,lty=2)
 	}
-	
+
 	if (opt[3]) tnologo(at=c(20.5,-3.2), size=0.8, aspect=(7/14)*(11.7/8.3), bcol=rgb(1,0.4,0.4))
 	if (opt[4]) {box(); axis(1); axis(2, las=1); axis(3, labels=F); axis(4,las=1, labels=F)}
 	if (opt[5]) mtext("Dutch 1997 references",1,line=3.3,at=8,cex=0.7,adj=0)
 }
 
-plot.stadia.lines <- function(plotlines, colors, sex, ref){
+#' Draw reference percentile lines on a puberty stadia plot
+#'
+#' Internal helper used by \code{\link{plot_stadia}} to add the Dutch
+#' reference lines for males (Genital, Pubic hair, Testis) or females
+#' (Breast, Pubic hair, Menarche) to the current plot.
+#'
+#' @param plotlines Logical vector of length 3 indicating which reference
+#'   lines to draw.
+#' @param colors Character vector of length 3 with the colors for the three
+#'   pubertal stage variables.
+#' @param sex \code{"M"} or \code{"F"}.
+#' @param ref Reference data, as produced by \code{\link{pub.ref.lines}}.
+#' @return Invisibly returns \code{NULL}; the function draws on the current
+#'   graphics device.
+#' @export
+#' @importFrom graphics matlines text
+plot_stadia_lines <- function(plotlines, colors, sex, ref){
 	# adds the Dutch reference lines for males and females to the plot (Genital, Pubic, Testis, Breast, Pubic, Menarche)
-	
+
 	xgrid <- seq(8,21,0.25)
-	
+
 	if (sex=="M"){
 		if (plotlines[3]) {
 			col <- colors[3]
@@ -78,7 +138,7 @@ plot.stadia.lines <- function(plotlines, colors, sex, ref){
 			text(x=c(20,20,20,19),y=c(-1.1,-0.65,-0.18,1),labels=c("12ml","16ml","20ml","25ml"),cex=0.8,adj=0,col=col)
 			text(21,1,labels="Testis",col=col,adj=1)
 		}
-		
+
 		if (plotlines[1]) {
 			col = colors[1]
 			matlines(xgrid,ref$gen[,2:6],lwd=1,lty=1,col=col)
@@ -86,7 +146,7 @@ plot.stadia.lines <- function(plotlines, colors, sex, ref){
 			text(x=c(15.5,20,20,20),y=c(-3,-2.7,-1.6,0.25),labels=c("G1","G3","G4","G5"),cex=0.8,adj=0,col=col)
 			text(21,1.5,labels="Genital",col=col,adj=1)
 		}
-		
+
 		if (plotlines[2]) {
 			col <- colors[2]
 			matlines(xgrid,ref$phb[,2:6],lwd=1,lty=1,col=col)
@@ -94,9 +154,9 @@ plot.stadia.lines <- function(plotlines, colors, sex, ref){
 			text(x=c(16.5,18.8,20),y=c(-3,-3,-2.24),labels=c("P1","P3","P4"),cex=0.8,adj=0,col=col)
 			text(21,1.25,labels="Pubic hair",col=col,adj=1)
 		}
-		
+
 	}
-	
+
 	if (sex=="F"){
 		if (plotlines[1]) {
 			col = colors[1]
@@ -105,7 +165,7 @@ plot.stadia.lines <- function(plotlines, colors, sex, ref){
 			text(x=c(20,20,20),y=c(-2.7,-1.5,0.2),labels=c("B3","B4","B5"),cex=0.8,adj=0,col=col)
 			text(21,1.5,labels="Breast",col=col,adj=1)
 		}
-		
+
 		if (plotlines[2]) {
 			col <- colors[2]
 			matlines(x=xgrid,y=ref$phg[,2:6],lwd=1,lty=1,col=col)
@@ -113,7 +173,7 @@ plot.stadia.lines <- function(plotlines, colors, sex, ref){
 			text(x=c(15.3,16.5,18.5,20,20),y=c(-3,-3,-3,-2.1,-0.2),labels=c("P1","P2","P3","P4","P5"),cex=0.8,adj=0,col=col)
 			text(21,1.25,labels="Pubic hair",col=col,adj=1)
 		}
-		
+
 		if (plotlines[3]) {
 			col <- colors[3]
 			matlines(x=xgrid,y=ref$men[,2:3],lwd=1,lty=1,col=col)
@@ -122,9 +182,27 @@ plot.stadia.lines <- function(plotlines, colors, sex, ref){
 	}
 }
 
-plot.stadia.data <- function(ages, pubs, sex, type, colors, ref){
+#' Draw a person's pubertal stage trajectory on a puberty stadia plot
+#'
+#' Internal helper used by \code{\link{plot_stadia}} to draw a single
+#' person's pubertal stage trajectory, interpolated along the reference
+#' curves, on the current plot.
+#'
+#' @param ages Vector of ages at measurement.
+#' @param pubs Data frame with the pubertal stage variables for this person.
+#' @param sex \code{"M"} or \code{"F"}.
+#' @param type Logical vector of length 3 indicating which pubertal stage
+#'   variables to plot.
+#' @param colors Character vector of length 3 with the colors for the three
+#'   pubertal stage variables.
+#' @param ref Reference data, as produced by \code{\link{pub.ref.lines}}.
+#' @return Invisibly returns \code{NULL}; the function draws on the current
+#'   graphics device.
+#' @export
+#' @importFrom graphics lines points
+plot_stadia_data <- function(ages, pubs, sex, type, colors, ref){
 	xgrid <- seq(8,21,0.25)
-	
+
 	if (sex=="M") {
 		if (type[1]) {
 			col <- colors[1]
@@ -134,7 +212,7 @@ plot.stadia.data <- function(ages, pubs, sex, type, colors, ref){
 			lines(curve,lwd=2,col=col)
 			points(x=curve$x[curve$patient],y=curve$y[curve$patient],pch=16,col=col)
 		}
-		
+
 		if (type[2]) {
 			col <- colors[2]
 			stages <- unlist(pubs[,"phb"])
@@ -143,7 +221,7 @@ plot.stadia.data <- function(ages, pubs, sex, type, colors, ref){
 			lines(curve,lwd=2,col=col)
 			points(x=curve$x[curve$patient],y=curve$y[curve$patient],pch=16,col=col)
 		}
-		
+
 		if (type[3]) {
 			col <- colors[3]
 			stages <- unlist(pubs[,"tv"])
@@ -153,7 +231,7 @@ plot.stadia.data <- function(ages, pubs, sex, type, colors, ref){
 			points(x=curve$x[curve$patient],y=curve$y[curve$patient],pch=16,col=col)
 		}
 	}
-	
+
 	if (sex=="F") {
 		if (type[1]) {
 			col <- colors[1]
@@ -163,7 +241,7 @@ plot.stadia.data <- function(ages, pubs, sex, type, colors, ref){
 			lines(curve,lwd=2,col=col)
 			points(x=curve$x[curve$patient],y=curve$y[curve$patient],pch=16,col=col)
 		}
-		
+
 		if (type[2]) {
 			col <- colors[2]
 			stages <- unlist(pubs[,"phg"])
@@ -172,7 +250,7 @@ plot.stadia.data <- function(ages, pubs, sex, type, colors, ref){
 			lines(curve,lwd=2,col=col)
 			points(x=curve$x[curve$patient],y=curve$y[curve$patient],pch=16,col=col)
 		}
-		
+
 		if (type[3]) {
 			col <- colors[3]
 			stages <- unlist(pubs[,"men"])
@@ -185,24 +263,39 @@ plot.stadia.data <- function(ages, pubs, sex, type, colors, ref){
 }
 
 
+#' Interpolate a pubertal stage trajectory along reference curves
+#'
+#' Computes the x/y coordinates needed to plot a patient's pubertal stage
+#' trajectory along the reference curves, including the interpolated
+#' segments between measurement ages within the same stage.
+#'
+#' @param refx Vector of reference ages.
+#' @param refy Matrix of reference values, one column per stage.
+#' @param patx Vector of patient ages.
+#' @param pats Vector of patient stages (column indices into \code{refy}).
+#' @return A list with components \code{x}, \code{y}, \code{stage} and
+#'   \code{patient} (a logical flag indicating whether a point is an
+#'   observed patient measurement or an interpolated reference point).
+#' @export
+#' @importFrom stats approx
 findXY <- function(refx, refy, patx, pats){
 	# calculates the coordinates and symbols of the data line to be plotted
 	# refx - vector of reference ages
 	# refy - matrix of reference values for each stage
 	# patx - vector of patient ages
 	# pats - vector of patient stages
-	
+
 	# returns a array with x, y and symbol
-	
+
 	# declare return vectors
 	yout <- vector("numeric",0)
 	xout <- vector("numeric",0)
 	patient <- vector("logical",0)
 	stage <- vector("numeric",0)
-	
+
 	# identify the segments
 	segments <- findSegments(pats)
-	
+
 	for (i in 1:nrow(segments)){
 		select <- segments[i,]
 		theStage <- pats[select][1]
@@ -212,15 +305,15 @@ findXY <- function(refx, refy, patx, pats){
 			x2 <- refx[refx>min(x1,na.rm=T)&refx<max(x1,na.rm=T)]  # x2 is needed for plotting along the curve
 			xo <- c(x1,x2)
 			flags <- c(rep(T,sum(select,na.rm=T)),rep(F,length(x2)))
-			
+
 			# sort in proper order
 			ix <- order(xo)
 			flags <- flags[ix]
 			xo <- xo[ix]
-			
+
 			# interpolate the Y values
 			y <- approx(x=refx, y=refy[,theStage], xo)$y
-			
+
 			# and store
 			yout <- c(yout,y)
 			xout <- c(xout,xo)
@@ -231,11 +324,22 @@ findXY <- function(refx, refy, patx, pats){
 	return(list(x=xout,y=yout,stage=stage,patient=patient))
 }
 
+#' Find segments of constant value in a vector
+#'
+#' Determines the runs (segments) in \code{z} over which the value does not
+#' change, ignoring missing values. Used by \code{\link{findXY}} to split a
+#' patient's stage trajectory into per-stage segments.
+#'
+#' @param z A vector, typically of pubertal stages.
+#' @return A logical matrix with one row per segment and one column per
+#'   element of \code{z}, where \code{TRUE} marks membership of that element
+#'   in the segment.
+#' @export
 findSegments <- function(z){
 	# determines the segments of z in which z does not change
 	y <- z[!is.na(z)]
 	nsegments <- sum(diff(y)!=0) + 1
-	
+
 	selector <- matrix(F,nrow=nsegments,ncol=length(z))
 	k <- 1
 	z.old <- z[1]
@@ -251,6 +355,21 @@ findSegments <- function(z){
 
 
 
+#' Draw the TNO logo
+#'
+#' Plots the TNO logo using the current coordinate system. Used by
+#' \code{\link{plot_stadia_general}} to brand the puberty stadia plots.
+#'
+#' @param col Foreground color.
+#' @param bcol Background color.
+#' @param at (x, y) coordinate of the lower left corner of the logo.
+#' @param size Horizontal size, measured in the units of the x-axis.
+#' @param aspect Unit size of the y-axis divided by the unit size of the
+#'   x-axis.
+#' @return Invisibly returns \code{NULL}; the function draws on the current
+#'   graphics device.
+#' @export
+#' @importFrom graphics polygon
 tnologo <- function(col = "darkblue", bcol = "white", at=c(0,0), size=300, aspect=1) {
 	# plots the TNO logo using the current coordinate system
 	# argument 'at' is the (x,y)-coordinate of the lower left corner of the logo
@@ -269,7 +388,7 @@ tnologo <- function(col = "darkblue", bcol = "white", at=c(0,0), size=300, aspec
 			86.5, 86.5, 186, 169, 189, 189)
 	x <- offsetx + x * scalex
 	y <- offsety + (275 - y) * scaley
-	unit.circle <- complex(arg = seq( - pi, pi, length = 40))
+	unit.circle <- complex(argument = seq( - pi, pi, length = 40))
 	select <- c(1:9, 28:40)
 	polygon(x=offsetx+c(0,0,309,309)*size,y=offsety+c(0,300,300,0)*size*aspect,col=bcol,border=F)
 	polygon(x = x, y = y, col = c(col, bcol, col, col), border = F)
@@ -282,13 +401,26 @@ tnologo <- function(col = "darkblue", bcol = "white", at=c(0,0), size=300, aspec
 # tnologo(at=c(4,4),size=1,bcol="red",col="white"); tnologo(at=c(0,0),size=4,bcol="yellow",col="black")
 
 
-# define the function for calculating SDS
+#' Calculate the standard deviation score (SDS) of a pubertal stage
+#'
+#' Calculates the SDS for a pubertal stage measurement, given the patient's
+#' age and observed stage, by interpolating between the surrounding
+#' reference percentiles.
+#'
+#' @param age Vector of patient ages.
+#' @param stage Vector of patient stages.
+#' @param type Reference type: one of \code{"gen"}, \code{"phb"},
+#'   \code{"tv"}, \code{"bre"}, \code{"phg"} or \code{"men"}.
+#' @param ref Reference data, as produced by \code{\link{pub.ref}}.
+#' @return A numeric vector of SDS values, one per element of \code{age}.
+#' @export
+#' @importFrom stats approx qnorm
 calculateSDS <- function(age, stage, type, ref=pubertyplot::pub.ref){
 	# calculates the SDS
 	# age - vector of patient ages
 	# stage - vector of patient stages
 	# type of reference: "gen","phb","tv","bre","phg" or "men"
-	
+
 	sds <- vector("numeric",length(age))
 	r <- ref[[type]]
 	m <- ncol(r)

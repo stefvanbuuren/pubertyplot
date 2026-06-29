@@ -1,9 +1,21 @@
 
+#' rApache handler for uploading puberty data files
+#'
+#' Validates an uploaded data file (referenced in the rApache \code{FILES}
+#' request), saves it as an \code{.RData} file in \code{/tmp}, and prints a
+#' JSON summary of the data per person. This function is intended to be
+#' called from the rApache web frontend shipped in \code{inst/webapps}, not
+#' interactively from R.
+#'
+#' @return Invisibly saves an \code{.RData} file and prints a JSON status
+#'   string to the response.
+#' @export
+#' @importFrom stats runif
+#' @importFrom utils read.csv read.table
+#' @importFrom foreign read.spss
 upload_tryCatch_pro <- function(){
 	setContentType("text/html");
 	printSuccess <- function() {
-		
-		library(foreign);
 		
 		filename <- FILES$datafile$name;
 		
