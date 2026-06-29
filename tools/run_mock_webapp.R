@@ -290,10 +290,17 @@ app <- list(
 host <- "127.0.0.1"
 port <- 7654
 server <- httpuv::startServer(host, port, app)
+puberty_url <- sprintf("http://%s:%d/puberty/", host, port)
+pubertypro_url <- sprintf("http://%s:%d/pubertypro/", host, port)
 cat("Mock webapps running at:\n")
-cat(sprintf("  http://%s:%d/puberty/\n", host, port))
-cat(sprintf("  http://%s:%d/pubertypro/\n", host, port))
+cat(" ", puberty_url, "\n")
+cat(" ", pubertypro_url, "\n")
 cat("Press Ctrl+C to stop.\n")
+
+## IDE consoles (e.g. Positron, RStudio) don't always know how to open a
+## bare local server URL when its link is clicked ("No application found
+## to load URL"). Open it directly in the system browser instead.
+utils::browseURL(puberty_url)
 
 repeat {
   httpuv::service()
